@@ -3,25 +3,26 @@ import 'dart:developer';
 
 import 'package:bank_management/constant/gap_const.dart';
 import 'package:bank_management/constant/my_color.dart';
+import 'package:bank_management/db/bank_user_db.dart';
 import 'package:bank_management/db/user.dart';
-import 'package:bank_management/domain/bank_user_model.dart';
 import 'package:bank_management/presentation/user_list_screen.dart';
+import 'package:bank_management/widget/common_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:realm/realm.dart';
 
 final realmProvider = Provider<Realm>((ref) {
-  var config = Configuration.local([BankUser.schema]);
+  var config = Configuration.local([BankUserDb.schema]);
   return Realm(config);
 });
 
-final bankuserProvider = StreamProvider<List<BankUser>>((ref) {
+final bankuserProvider = StreamProvider<List<BankUserDb>>((ref) {
   final realm = ref.watch(realmProvider);
-  final tasks = realm.all<BankUser>();
+  final tasks = realm.all<BankUserDb>();
   //
 
-  final controller = StreamController<List<BankUser>>.broadcast();
+  final controller = StreamController<List<BankUserDb>>.broadcast();
 
   final subscription = tasks.changes.listen((changes) {
     final updatedTasks = tasks.toList();
@@ -39,8 +40,8 @@ final bankuserProvider = StreamProvider<List<BankUser>>((ref) {
   return controller.stream;
 });
 
-Stream<List<BankUser>> dataStream(BankUser data) async* {
-  List<BankUser> counterList = [];
+Stream<List<BankUserDb>> dataStream(BankUserDb data) async* {
+  List<BankUserDb> counterList = [];
 
   while (true) {
     await Future.delayed(Duration(seconds: 1));
@@ -61,6 +62,10 @@ class _CreateScreenState extends State<CreateScreen> {
   DateTime initialDate = DateTime.now();
   final TextEditingController userNameController = TextEditingController();
   final TextEditingController pwController = TextEditingController();
+  final TextEditingController confirmPwController = TextEditingController();
+  final TextEditingController accNameController = TextEditingController();
+  final TextEditingController amountController = TextEditingController();
+  final TextEditingController accNoController = TextEditingController();
 
   late Realm realm;
   int id = 0;
@@ -72,7 +77,7 @@ class _CreateScreenState extends State<CreateScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var config = Configuration.local([BankUser.schema]);
+    var config = Configuration.local([BankUserDb.schema]);
 
     var realm = Realm(config);
     return Scaffold(
@@ -104,80 +109,72 @@ class _CreateScreenState extends State<CreateScreen> {
                       child: Column(
                         children: [
                           SizedBox(
-                            height: 25,
-                          ),
+                              width: 250,
+                              child: CommonTextField(
+                                controller: userNameController,
+                                labelText: "User Name",
+                                onChanged: (name) {
+                                  userNameController.text = name;
+                                  setState(() {});
+                                },
+                              )),
+                          25.vGap,
+                          SizedBox(
+                              width: 250,
+                              child: CommonTextField(
+                                controller: userNameController,
+                                labelText: "Account Name",
+                                onChanged: (acc) {
+                                  accNameController.text = acc;
+                                  setState(() {});
+                                },
+                              )),
+                          25.vGap,
+                          SizedBox(
+                              width: 250,
+                              child: CommonTextField(
+                                controller: pwController,
+                                labelText: "Password",
+                                onChanged: (pw) {
+                                  pwController.text = pw;
+                                  setState(() {});
+                                },
+                              )),
+                          25.vGap,
+                          SizedBox(
+                              width: 250,
+                              child: CommonTextField(
+                                controller: confirmPwController,
+                                labelText: "Confirm Password",
+                                onChanged: (conPw) {
+                                  confirmPwController.text = conPw;
+                                  setState(() {});
+                                },
+                              )),
+                          25.vGap,
                           SizedBox(
                             width: 250,
-                            child: TextFormField(
-                              cursorColor: MyColor.main,
-                              focusNode: myFocusNodeName,
-                              controller: userNameController,
-                              textAlign: TextAlign.start,
-                              style: const TextStyle(
-                                  fontSize: 15, color: Colors.black),
-                              onChanged: (val) {},
-                              decoration: InputDecoration(
-                                  labelText: "User Name",
-                                  fillColor: Colors.white,
-                                  contentPadding: const EdgeInsets.only(
-                                      left: 20, right: 20),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12.0),
-                                    borderSide: BorderSide(color: MyColor.main),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12.0),
-                                    borderSide: BorderSide(color: MyColor.main),
-                                  ),
-                                  labelStyle: TextStyle(
-                                      color: myFocusNodeName.hasFocus
-                                          ? MyColor.main
-                                          : Colors.black)
-
-                                  //fillColor: Colors.green
-                                  ),
-                              keyboardType: TextInputType.text,
+                            child: CommonTextField(
+                              controller: accNoController,
+                              labelText: "Account No",
+                              onChanged: (no) {
+                                accNoController.text = no;
+                                setState(() {});
+                              },
                             ),
                           ),
+                          25.vGap,
                           SizedBox(
-                            height: 25,
-                          ),
-                          SizedBox(
-                            width: 250,
-                            child: TextFormField(
-                              cursorColor: MyColor.main,
-                              focusNode: myFocusNode,
-                              controller: pwController,
-                              textAlign: TextAlign.start,
-                              style: const TextStyle(
-                                  fontSize: 15, color: Colors.black),
-                              onChanged: (val) {},
-                              decoration: InputDecoration(
-                                  labelText: "Password",
-                                  fillColor: Colors.white,
-                                  contentPadding: const EdgeInsets.only(
-                                      left: 20, right: 20),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12.0),
-                                    borderSide: BorderSide(color: MyColor.main),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12.0),
-                                    borderSide: BorderSide(color: MyColor.main),
-                                  ),
-                                  labelStyle: TextStyle(
-                                      color: myFocusNode.hasFocus
-                                          ? MyColor.main
-                                          : Colors.black)
-
-                                  //fillColor: Colors.green
-                                  ),
-                              keyboardType: TextInputType.text,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 25,
-                          ),
+                              width: 250,
+                              child: CommonTextField(
+                                controller: amountController,
+                                labelText: "Amount",
+                                onChanged: (amount) {
+                                  amountController.text = amount;
+                                  setState(() {});
+                                },
+                              )),
+                          25.vGap,
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -192,12 +189,15 @@ class _CreateScreenState extends State<CreateScreen> {
                                       DateFormat('yyyy-MM-dd | HH:mm:ss a')
                                           .format(now);
 
-                                  var item = BankUser(
-                                      ObjectId(),
-                                      0,
-                                      userNameController.text,
-                                      pwController.text,
-                                      "");
+                                  var item = BankUserDb(
+                                    ObjectId(),
+                                    int.tryParse(amountController.text) ?? 0,
+                                    userNameController.text,
+                                    accNameController.text,
+                                    accNoController.text,
+                                    confirmPwController.text,
+                                    "",
+                                  );
                                   realm.write(() {
                                     realm.add(item);
                                   });
@@ -235,9 +235,7 @@ class _CreateScreenState extends State<CreateScreen> {
                               // TableCalendar(focusedDay: _focusedDay, firstDay: firstDay, lastDay: lastDay)
                             ],
                           ),
-                          SizedBox(
-                            height: 25,
-                          ),
+                          25.vGap,
                         ],
                       ),
                     ),

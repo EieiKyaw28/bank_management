@@ -1,8 +1,8 @@
 import 'package:realm/realm.dart';
-part 'user.g.dart';
+part 'bank_user_db.g.dart';
 
-@RealmModel() 
-class $BankUser {
+@RealmModel()
+class $BankUserDb {
   @PrimaryKey()
   late ObjectId id;
 

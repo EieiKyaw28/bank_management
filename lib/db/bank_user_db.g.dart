@@ -1,15 +1,15 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'user.dart';
+part of 'bank_user_db.dart';
 
 // **************************************************************************
 // RealmObjectGenerator
 // **************************************************************************
 
 // ignore_for_file: type=lint
-class BankUser extends $BankUser
+class BankUserDb extends $BankUserDb
     with RealmEntity, RealmObjectBase, RealmObject {
-  BankUser(
+  BankUserDb(
     ObjectId id,
     int amount,
     String userName,
@@ -27,7 +27,7 @@ class BankUser extends $BankUser
     RealmObjectBase.set(this, 'createDate', createDate);
   }
 
-  BankUser._();
+  BankUserDb._();
 
   @override
   ObjectId get id => RealmObjectBase.get<ObjectId>(this, 'id') as ObjectId;
@@ -69,17 +69,18 @@ class BankUser extends $BankUser
       RealmObjectBase.set(this, 'createDate', value);
 
   @override
-  Stream<RealmObjectChanges<BankUser>> get changes =>
-      RealmObjectBase.getChanges<BankUser>(this);
+  Stream<RealmObjectChanges<BankUserDb>> get changes =>
+      RealmObjectBase.getChanges<BankUserDb>(this);
 
   @override
-  BankUser freeze() => RealmObjectBase.freezeObject<BankUser>(this);
+  BankUserDb freeze() => RealmObjectBase.freezeObject<BankUserDb>(this);
 
   static SchemaObject get schema => _schema ??= _initSchema();
   static SchemaObject? _schema;
   static SchemaObject _initSchema() {
-    RealmObjectBase.registerFactory(BankUser._);
-    return const SchemaObject(ObjectType.realmObject, BankUser, 'BankUser', [
+    RealmObjectBase.registerFactory(BankUserDb._);
+    return const SchemaObject(
+        ObjectType.realmObject, BankUserDb, 'BankUserDb', [
       SchemaProperty('id', RealmPropertyType.objectid, primaryKey: true),
       SchemaProperty('amount', RealmPropertyType.int),
       SchemaProperty('userName', RealmPropertyType.string),
